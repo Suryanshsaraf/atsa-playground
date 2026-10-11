@@ -5,6 +5,7 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/atsa-playground/',
   plugins: [react()],
   resolve: {
     alias: {
