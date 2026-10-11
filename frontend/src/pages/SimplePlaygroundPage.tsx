@@ -1237,9 +1237,15 @@ const SimplePlaygroundPage: React.FC = () => {
               <tr>
                 <th className="p-2.5">Rank</th>
                 <th className="p-2.5">Model</th>
-                <th className="p-2.5 font-mono text-right">RMSE</th>
-                <th className="p-2.5 font-mono text-right">MAE</th>
-                <th className="p-2.5 font-mono text-right">MAPE (%)</th>
+                <th className="p-2.5 font-mono text-right" title="Root Mean Squared Error: √[(1/n) Σ(y - ŷ)²]">
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">RMSE ⓘ</span>
+                </th>
+                <th className="p-2.5 font-mono text-right" title="Mean Absolute Error: (1/n) Σ|y - ŷ|">
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">MAE ⓘ</span>
+                </th>
+                <th className="p-2.5 font-mono text-right" title="Mean Absolute Percentage Error: (100%/n) Σ|(y - ŷ)/y|">
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">MAPE (%) ⓘ</span>
+                </th>
                 <th className="p-2.5 text-center">Action</th>
               </tr>
             </thead>
