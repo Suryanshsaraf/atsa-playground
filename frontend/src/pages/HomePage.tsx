@@ -13,12 +13,38 @@ import {
   Star,
   ChevronDown
 } from 'lucide-react';
+import { ThemeToggle } from '../components/common/ThemeToggle';
 
 const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20">
+      {/* Top Navigation Bar */}
+      <header className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        <Link to="/" className="flex items-center space-x-2 text-base font-bold text-slate-900 dark:text-white">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-xl flex items-center justify-center font-black shadow-md">
+            A
+          </div>
+          <span className="font-extrabold tracking-tight">ATSA Playground</span>
+        </Link>
+        <div className="flex items-center space-x-3">
+          <Link
+            to="/playground"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/60 dark:hover:bg-slate-800 transition-colors"
+          >
+            Playground
+          </Link>
+          <Link
+            to="/learn"
+            className="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-white/60 dark:hover:bg-slate-800 transition-colors"
+          >
+            Learn
+          </Link>
+          <ThemeToggle />
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 px-4">
+      <section className="relative overflow-hidden py-16 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Background Animation */}
           <div className="absolute inset-0 overflow-hidden">

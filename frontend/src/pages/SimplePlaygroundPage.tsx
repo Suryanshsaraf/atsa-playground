@@ -29,9 +29,14 @@ import {
   Keyboard
 } from 'lucide-react';
 import API from '../services/api';
+import { useTheme } from '../App';
 import { KeyboardShortcutsModal } from '../components/common/KeyboardShortcutsModal';
+import { ThemeToggle } from '../components/common/ThemeToggle';
 
 const SimplePlaygroundPage: React.FC = () => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   // Connection & Dataset State
   const [backendConnected, setBackendConnected] = useState<boolean>(false);
   const [sampleDatasets, setSampleDatasets] = useState<any[]>([]);
@@ -676,22 +681,22 @@ const SimplePlaygroundPage: React.FC = () => {
       return (
         <div className="space-y-3">
           {/* Backtest KPI Row */}
-          <div className="grid grid-cols-4 gap-3 bg-slate-50/70 p-3 rounded-xl border border-slate-100">
+          <div className="grid grid-cols-4 gap-3 bg-slate-50/70 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Test RMSE</span>
-              <div className="text-sm font-bold font-mono text-slate-800">{test_metrics.rmse.toFixed(3)}</div>
+              <div className="text-sm font-bold font-mono text-slate-800 dark:text-slate-100">{test_metrics.rmse.toFixed(3)}</div>
             </div>
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Test MAE</span>
-              <div className="text-sm font-bold font-mono text-slate-800">{test_metrics.mae.toFixed(3)}</div>
+              <div className="text-sm font-bold font-mono text-slate-800 dark:text-slate-100">{test_metrics.mae.toFixed(3)}</div>
             </div>
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Naive Walk RMSE</span>
-              <div className="text-sm font-bold font-mono text-slate-500">{test_metrics.naive_rmse.toFixed(3)}</div>
+              <div className="text-sm font-bold font-mono text-slate-500 dark:text-slate-400">{test_metrics.naive_rmse.toFixed(3)}</div>
             </div>
             <div>
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">vs Random Walk</span>
-              <div className={`text-sm font-bold font-mono ${test_metrics.improvement_pct > 0 ? 'text-emerald-600' : 'text-amber-600'}`}>
+              <div className={`text-sm font-bold font-mono ${test_metrics.improvement_pct > 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
                 {test_metrics.improvement_pct > 0 ? `+${test_metrics.improvement_pct.toFixed(1)}%` : `${test_metrics.improvement_pct.toFixed(1)}%`}
               </div>
             </div>
@@ -706,7 +711,7 @@ const SimplePlaygroundPage: React.FC = () => {
                   type: 'scatter',
                   mode: 'lines',
                   name: 'Train History',
-                  line: { color: '#94a3b8', width: 1.8 }
+                  line: { color: isDark ? '#64748b' : '#94a3b8', width: 1.8 }
                 },
                 {
                   x: test_dates,
@@ -730,7 +735,7 @@ const SimplePlaygroundPage: React.FC = () => {
                   x: [...test_dates, ...[...test_dates].reverse()],
                   y: [...forecast_upper, ...[...forecast_lower].reverse()],
                   fill: 'toself',
-                  fillcolor: 'rgba(245, 158, 11, 0.12)',
+                  fillcolor: isDark ? 'rgba(245, 158, 11, 0.18)' : 'rgba(245, 158, 11, 0.12)',
                   line: { color: 'transparent' },
                   name: '95% Confidence Interval',
                   showlegend: false
@@ -740,11 +745,12 @@ const SimplePlaygroundPage: React.FC = () => {
                 autosize: true,
                 margin: { l: 45, r: 20, t: 20, b: 35 },
                 hovermode: 'x unified',
-                legend: { orientation: 'h', y: 1.12 },
-                xaxis: { showgrid: true, gridcolor: '#f8fafc' },
-                yaxis: { showgrid: true, gridcolor: '#f8fafc' },
+                legend: { orientation: 'h', y: 1.12, font: { color: isDark ? '#cbd5e1' : '#334155', size: 11 } },
+                xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                 paper_bgcolor: 'transparent',
-                plot_bgcolor: 'transparent'
+                plot_bgcolor: 'transparent',
+                font: { color: isDark ? '#cbd5e1' : '#334155' }
               }}
               useResizeHandler={true}
               style={{ width: '100%', height: '100%' }}
@@ -819,11 +825,12 @@ const SimplePlaygroundPage: React.FC = () => {
             autosize: true,
             margin: { l: 45, r: 20, t: 20, b: 35 },
             hovermode: 'x unified',
-            legend: { orientation: 'h', y: 1.10, x: 0 },
-            xaxis: { showgrid: true, gridcolor: '#f8fafc' },
-            yaxis: { showgrid: true, gridcolor: '#f8fafc' },
+            legend: { orientation: 'h', y: 1.10, x: 0, font: { color: isDark ? '#cbd5e1' : '#334155', size: 11 } },
+            xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+            yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
             paper_bgcolor: 'transparent',
-            plot_bgcolor: 'transparent'
+            plot_bgcolor: 'transparent',
+            font: { color: isDark ? '#cbd5e1' : '#334155' }
           }}
           useResizeHandler={true}
           style={{ width: '100%', height: '100%' }}
@@ -837,7 +844,7 @@ const SimplePlaygroundPage: React.FC = () => {
     return (
       <div className="space-y-4">
         {/* Sub-Pills for Exploration */}
-        <div className="flex space-x-1.5 p-1 bg-slate-100/80 rounded-xl w-fit">
+        <div className="flex space-x-1.5 p-1 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl w-fit">
           {[
             { id: 'stationarity', label: 'Stationarity (ADF & KPSS)' },
             { id: 'decomposition', label: 'Decomposition' },
@@ -847,10 +854,10 @@ const SimplePlaygroundPage: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setEdaTab(tab.id as any)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                 edaTab === tab.id
-                  ? 'bg-white text-slate-800 shadow-sm'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-100 shadow-xs font-bold'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
               }`}
             >
               {tab.label}
@@ -865,32 +872,32 @@ const SimplePlaygroundPage: React.FC = () => {
               <div className="h-80 flex items-center justify-center text-slate-400 text-sm">Testing stationarity...</div>
             ) : stationarityData && stationarityData.adf_test ? (
               <div className="space-y-3">
-                <div className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${stationarityData.conclusion.is_stationary ? 'bg-emerald-50/60 border-emerald-200 text-emerald-900' : 'bg-amber-50/60 border-amber-200 text-amber-900'}`}>
+                <div className={`p-3.5 rounded-xl border text-xs font-medium leading-relaxed ${stationarityData.conclusion.is_stationary ? 'bg-emerald-50/60 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300' : 'bg-amber-50/60 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300'}`}>
                   <strong>Recommendation:</strong> {stationarityData.conclusion.recommendation}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/80">
+                  <div className="bg-slate-50/80 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
                     <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-xs font-bold text-slate-700">Augmented Dickey-Fuller (ADF)</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${stationarityData.adf_test.is_stationary ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Augmented Dickey-Fuller (ADF)</span>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${stationarityData.adf_test.is_stationary ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300'}`}>
                         {stationarityData.adf_test.is_stationary ? 'Stationary' : 'Unit Root Present'}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-600 space-y-1 font-mono pt-1">
+                    <div className="text-xs text-slate-600 dark:text-slate-300 space-y-1 font-mono pt-1">
                       <div className="flex justify-between"><span>Statistic:</span><strong>{stationarityData.adf_test.statistic.toFixed(4)}</strong></div>
                       <div className="flex justify-between"><span>p-value:</span><strong>{stationarityData.adf_test.pvalue.toFixed(4)}</strong></div>
                     </div>
                   </div>
 
-                  <div className="bg-slate-50/80 p-3.5 rounded-xl border border-slate-200/80">
+                  <div className="bg-slate-50/80 dark:bg-slate-800/60 p-3.5 rounded-xl border border-slate-200/80 dark:border-slate-700/80">
                     <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-xs font-bold text-slate-700">KPSS Test</span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${stationarityData.kpss_test.is_stationary ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">KPSS Test</span>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${stationarityData.kpss_test.is_stationary ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300'}`}>
                         {stationarityData.kpss_test.is_stationary ? 'Stationary' : 'Non-Stationary'}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-600 space-y-1 font-mono pt-1">
+                    <div className="text-xs text-slate-600 dark:text-slate-300 space-y-1 font-mono pt-1">
                       <div className="flex justify-between"><span>Statistic:</span><strong>{stationarityData.kpss_test.statistic.toFixed(4)}</strong></div>
                       <div className="flex justify-between"><span>p-value:</span><strong>{stationarityData.kpss_test.pvalue.toFixed(4)}</strong></div>
                     </div>
@@ -899,8 +906,8 @@ const SimplePlaygroundPage: React.FC = () => {
               </div>
             ) : (
               <div className="h-80 flex flex-col items-center justify-center text-slate-400">
-                <ShieldCheck className="w-8 h-8 mb-2 text-slate-300" />
-                <button onClick={fetchStationarity} className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">
+                <ShieldCheck className="w-8 h-8 mb-2 text-slate-300 dark:text-slate-600" />
+                <button onClick={fetchStationarity} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">
                   Run ADF & KPSS Tests
                 </button>
               </div>
@@ -916,17 +923,25 @@ const SimplePlaygroundPage: React.FC = () => {
             ) : decompData && decompData.trend ? (
               <div className="grid grid-cols-2 gap-3">
                 {[
-                  { name: 'Observed', y: decompData.original, color: '#2563eb' },
+                  { name: 'Observed', y: decompData.original, color: '#3b82f6' },
                   { name: 'Trend Component', y: decompData.trend, color: '#10b981' },
                   { name: 'Seasonal Component', y: decompData.seasonal, color: '#f59e0b' },
                   { name: 'Residual Noise', y: decompData.residual, color: '#ef4444' }
                 ].map((plot) => (
-                  <div key={plot.name} className="bg-slate-50/70 p-2.5 rounded-xl border border-slate-100">
-                    <span className="text-[11px] font-bold text-slate-600">{plot.name}</span>
+                  <div key={plot.name} className="bg-slate-50/70 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
+                    <span className="text-[11px] font-bold text-slate-600 dark:text-slate-300">{plot.name}</span>
                     <div className="h-36">
                       <Plot
                         data={[{ x: decompData.dates || Array.from({ length: plot.y.length }, (_, i) => i), y: plot.y, type: 'scatter', mode: 'lines', line: { color: plot.color, width: 1.6 } }]}
-                        layout={{ autosize: true, margin: { l: 35, r: 10, t: 8, b: 20 }, xaxis: { showgrid: true, gridcolor: '#f1f5f9' }, yaxis: { showgrid: true, gridcolor: '#f1f5f9' }, paper_bgcolor: 'transparent', plot_bgcolor: 'transparent' }}
+                        layout={{
+                          autosize: true,
+                          margin: { l: 35, r: 10, t: 8, b: 20 },
+                          xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                          yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                          paper_bgcolor: 'transparent',
+                          plot_bgcolor: 'transparent',
+                          font: { color: isDark ? '#cbd5e1' : '#334155' }
+                        }}
                         useResizeHandler={true}
                         style={{ width: '100%', height: '100%' }}
                         config={{ responsive: true, displayModeBar: false }}
@@ -937,8 +952,8 @@ const SimplePlaygroundPage: React.FC = () => {
               </div>
             ) : (
               <div className="h-80 flex flex-col items-center justify-center text-slate-400">
-                <Layers className="w-8 h-8 mb-2 text-slate-300" />
-                <button onClick={fetchDecomposition} className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">
+                <Layers className="w-8 h-8 mb-2 text-slate-300 dark:text-slate-600" />
+                <button onClick={fetchDecomposition} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">
                   Decompose Series
                 </button>
               </div>
@@ -953,22 +968,23 @@ const SimplePlaygroundPage: React.FC = () => {
               <div className="h-80 flex items-center justify-center text-slate-400 text-sm">Computing correlations...</div>
             ) : acfData && acfData.acf ? (
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
-                  <span className="text-xs font-bold text-slate-700">Autocorrelation Function (ACF)</span>
+                <div className="bg-slate-50/70 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Autocorrelation Function (ACF)</span>
                   <div className="h-64">
                     <Plot
                       data={[{ x: acfData.acf.lags, y: acfData.acf.values, type: 'bar', marker: { color: '#3b82f6' } }]}
                       layout={{
                         autosize: true,
                         margin: { l: 35, r: 10, t: 15, b: 30 },
-                        xaxis: { title: { text: 'Lag' }, showgrid: true },
-                        yaxis: { title: { text: 'Correlation' }, range: [-1, 1], showgrid: true },
+                        xaxis: { title: { text: 'Lag', font: { color: isDark ? '#94a3b8' : '#64748b' } }, showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                        yaxis: { title: { text: 'Correlation', font: { color: isDark ? '#94a3b8' : '#64748b' } }, range: [-1, 1], showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                         shapes: [
                           { type: 'line', x0: 0, x1: acfData.acf.lags.length - 1, y0: 1.96 / Math.sqrt(currentData?.records?.length || 50), y1: 1.96 / Math.sqrt(currentData?.records?.length || 50), line: { color: '#ef4444', dash: 'dash', width: 1.2 } },
                           { type: 'line', x0: 0, x1: acfData.acf.lags.length - 1, y0: -1.96 / Math.sqrt(currentData?.records?.length || 50), y1: -1.96 / Math.sqrt(currentData?.records?.length || 50), line: { color: '#ef4444', dash: 'dash', width: 1.2 } }
                         ],
                         paper_bgcolor: 'transparent',
-                        plot_bgcolor: 'transparent'
+                        plot_bgcolor: 'transparent',
+                        font: { color: isDark ? '#cbd5e1' : '#334155' }
                       }}
                       useResizeHandler={true}
                       style={{ width: '100%', height: '100%' }}
@@ -977,22 +993,23 @@ const SimplePlaygroundPage: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-100">
-                  <span className="text-xs font-bold text-slate-700">Partial Autocorrelation (PACF)</span>
+                <div className="bg-slate-50/70 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+                  <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Partial Autocorrelation (PACF)</span>
                   <div className="h-64">
                     <Plot
                       data={[{ x: acfData.pacf.lags, y: acfData.pacf.values, type: 'bar', marker: { color: '#8b5cf6' } }]}
                       layout={{
                         autosize: true,
                         margin: { l: 35, r: 10, t: 15, b: 30 },
-                        xaxis: { title: { text: 'Lag' }, showgrid: true },
-                        yaxis: { title: { text: 'Partial Corr' }, range: [-1, 1], showgrid: true },
+                        xaxis: { title: { text: 'Lag', font: { color: isDark ? '#94a3b8' : '#64748b' } }, showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                        yaxis: { title: { text: 'Partial Corr', font: { color: isDark ? '#94a3b8' : '#64748b' } }, range: [-1, 1], showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                         shapes: [
                           { type: 'line', x0: 0, x1: acfData.pacf.lags.length - 1, y0: 1.96 / Math.sqrt(currentData?.records?.length || 50), y1: 1.96 / Math.sqrt(currentData?.records?.length || 50), line: { color: '#ef4444', dash: 'dash', width: 1.2 } },
                           { type: 'line', x0: 0, x1: acfData.pacf.lags.length - 1, y0: -1.96 / Math.sqrt(currentData?.records?.length || 50), y1: -1.96 / Math.sqrt(currentData?.records?.length || 50), line: { color: '#ef4444', dash: 'dash', width: 1.2 } }
                         ],
                         paper_bgcolor: 'transparent',
-                        plot_bgcolor: 'transparent'
+                        plot_bgcolor: 'transparent',
+                        font: { color: isDark ? '#cbd5e1' : '#334155' }
                       }}
                       useResizeHandler={true}
                       style={{ width: '100%', height: '100%' }}
@@ -1003,8 +1020,8 @@ const SimplePlaygroundPage: React.FC = () => {
               </div>
             ) : (
               <div className="h-80 flex flex-col items-center justify-center text-slate-400">
-                <BarChart3 className="w-8 h-8 mb-2 text-slate-300" />
-                <button onClick={fetchACFPACF} className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">
+                <BarChart3 className="w-8 h-8 mb-2 text-slate-300 dark:text-slate-600" />
+                <button onClick={fetchACFPACF} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">
                   Compute ACF & PACF
                 </button>
               </div>
@@ -1021,18 +1038,19 @@ const SimplePlaygroundPage: React.FC = () => {
               <div className="h-72">
                 <Plot
                   data={[
-                    { x: rollingData.dates || Array.from({ length: rollingData.original.length }, (_, i) => i), y: rollingData.original, type: 'scatter', mode: 'lines', name: 'Original', line: { color: '#94a3b8', width: 1.5 } },
+                    { x: rollingData.dates || Array.from({ length: rollingData.original.length }, (_, i) => i), y: rollingData.original, type: 'scatter', mode: 'lines', name: 'Original', line: { color: isDark ? '#64748b' : '#94a3b8', width: 1.5 } },
                     { x: rollingData.dates || Array.from({ length: rollingData.original.length }, (_, i) => i), y: rollingData.rolling_mean, type: 'scatter', mode: 'lines', name: `Rolling Mean (w=${rollingData.window})`, line: { color: '#2563eb', width: 2.2 } }
                   ]}
                   layout={{
                     autosize: true,
                     margin: { l: 40, r: 15, t: 15, b: 30 },
                     hovermode: 'x unified',
-                    legend: { orientation: 'h', y: 1.15 },
-                    xaxis: { showgrid: true, gridcolor: '#f8fafc' },
-                    yaxis: { showgrid: true, gridcolor: '#f8fafc' },
+                    legend: { orientation: 'h', y: 1.15, font: { color: isDark ? '#cbd5e1' : '#334155' } },
+                    xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                    yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                     paper_bgcolor: 'transparent',
-                    plot_bgcolor: 'transparent'
+                    plot_bgcolor: 'transparent',
+                    font: { color: isDark ? '#cbd5e1' : '#334155' }
                   }}
                   useResizeHandler={true}
                   style={{ width: '100%', height: '100%' }}
@@ -1041,8 +1059,8 @@ const SimplePlaygroundPage: React.FC = () => {
               </div>
             ) : (
               <div className="h-80 flex flex-col items-center justify-center text-slate-400">
-                <Activity className="w-8 h-8 mb-2 text-slate-300" />
-                <button onClick={fetchRollingStats} className="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold">
+                <Activity className="w-8 h-8 mb-2 text-slate-300 dark:text-slate-600" />
+                <button onClick={fetchRollingStats} className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold cursor-pointer">
                   Compute Rolling Statistics
                 </button>
               </div>
@@ -1079,35 +1097,35 @@ const SimplePlaygroundPage: React.FC = () => {
 
     return (
       <div className="space-y-3">
-        <div className={`p-3 rounded-xl border text-xs font-medium flex items-center justify-between ${summary.is_white_noise ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900' : 'bg-rose-50/70 border-rose-200 text-rose-900'}`}>
+        <div className={`p-3 rounded-xl border text-xs font-medium flex items-center justify-between ${summary.is_white_noise ? 'bg-emerald-50/70 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300' : 'bg-rose-50/70 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800 text-rose-900 dark:text-rose-300'}`}>
           <span><strong>Box-Jenkins Step 3:</strong> {summary.conclusion}</span>
-          <span className="font-bold px-2 py-0.5 rounded bg-white/70">
+          <span className="font-bold px-2 py-0.5 rounded bg-white/70 dark:bg-slate-800 text-slate-800 dark:text-slate-100">
             {summary.is_white_noise ? 'Passed' : 'Needs Tuning'}
           </span>
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-xs">
-          <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200">
+          <div className="bg-slate-50/70 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80">
             <div className="flex justify-between items-center mb-1">
-              <span className="font-bold text-slate-700">Ljung-Box Test</span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ljung_box.is_white_noise ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+              <span className="font-bold text-slate-700 dark:text-slate-200">Ljung-Box Test</span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${ljung_box.is_white_noise ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300' : 'bg-rose-100 dark:bg-rose-900/60 text-rose-800 dark:text-rose-300'}`}>
                 {ljung_box.is_white_noise ? 'White Noise' : 'Correlated'}
               </span>
             </div>
-            <div className="flex justify-between font-mono text-slate-600 mt-1">
+            <div className="flex justify-between font-mono text-slate-600 dark:text-slate-300 mt-1">
               <span>Q-Stat: {ljung_box.statistic.toFixed(3)}</span>
               <span>p-val: <strong>{ljung_box.p_value.toFixed(4)}</strong></span>
             </div>
           </div>
 
-          <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-200">
+          <div className="bg-slate-50/70 dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80">
             <div className="flex justify-between items-center mb-1">
-              <span className="font-bold text-slate-700">Jarque-Bera Normality</span>
-              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${jarque_bera.is_normal ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+              <span className="font-bold text-slate-700 dark:text-slate-200">Jarque-Bera Normality</span>
+              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${jarque_bera.is_normal ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300' : 'bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300'}`}>
                 {jarque_bera.is_normal ? 'Gaussian' : 'Skewed'}
               </span>
             </div>
-            <div className="flex justify-between font-mono text-slate-600 mt-1">
+            <div className="flex justify-between font-mono text-slate-600 dark:text-slate-300 mt-1">
               <span>JB-Stat: {jarque_bera.statistic.toFixed(3)}</span>
               <span>p-val: <strong>{jarque_bera.p_value.toFixed(4)}</strong></span>
             </div>
@@ -1115,12 +1133,21 @@ const SimplePlaygroundPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-            <span className="text-xs font-bold text-slate-700">Residual Sequence</span>
+          <div className="bg-white dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-2xs">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Residual Sequence</span>
             <div className="h-64 xl:h-72">
               <Plot
                 data={[{ x: sequence.dates, y: sequence.residuals, type: 'scatter', mode: 'lines', line: { color: '#6366f1', width: 1.4 } }]}
-                layout={{ autosize: true, margin: { l: 30, r: 10, t: 10, b: 25 }, shapes: [{ type: 'line', x0: sequence.dates[0], x1: sequence.dates[sequence.dates.length - 1], y0: 0, y1: 0, line: { color: '#ef4444', dash: 'dash' } }], paper_bgcolor: 'transparent', plot_bgcolor: 'transparent' }}
+                layout={{
+                  autosize: true,
+                  margin: { l: 30, r: 10, t: 10, b: 25 },
+                  shapes: [{ type: 'line', x0: sequence.dates[0], x1: sequence.dates[sequence.dates.length - 1], y0: 0, y1: 0, line: { color: '#ef4444', dash: 'dash' } }],
+                  xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                  yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                  paper_bgcolor: 'transparent',
+                  plot_bgcolor: 'transparent',
+                  font: { color: isDark ? '#cbd5e1' : '#334155' }
+                }}
                 useResizeHandler={true}
                 style={{ width: '100%', height: '100%' }}
                 config={{ responsive: true, displayModeBar: false }}
@@ -1128,8 +1155,8 @@ const SimplePlaygroundPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-            <span className="text-xs font-bold text-slate-700">Residual ACF</span>
+          <div className="bg-white dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-2xs">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Residual ACF</span>
             <div className="h-64 xl:h-72">
               <Plot
                 data={[{ x: acf.lags, y: acf.values, type: 'bar', marker: { color: '#3b82f6' } }]}
@@ -1140,8 +1167,11 @@ const SimplePlaygroundPage: React.FC = () => {
                     { type: 'line', x0: 0, x1: acf.lags.length - 1, y0: acf.conf_limit, y1: acf.conf_limit, line: { color: '#ef4444', dash: 'dash', width: 1 } },
                     { type: 'line', x0: 0, x1: acf.lags.length - 1, y0: -acf.conf_limit, y1: -acf.conf_limit, line: { color: '#ef4444', dash: 'dash', width: 1 } }
                   ],
+                  xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                  yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                   paper_bgcolor: 'transparent',
-                  plot_bgcolor: 'transparent'
+                  plot_bgcolor: 'transparent',
+                  font: { color: isDark ? '#cbd5e1' : '#334155' }
                 }}
                 useResizeHandler={true}
                 style={{ width: '100%', height: '100%' }}
@@ -1150,15 +1180,24 @@ const SimplePlaygroundPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs">
-            <span className="text-xs font-bold text-slate-700">Histogram vs Normal Curve</span>
+          <div className="bg-white dark:bg-slate-800/60 p-3 rounded-xl border border-slate-200 dark:border-slate-700/80 shadow-2xs">
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-200">Histogram vs Normal Curve</span>
             <div className="h-64 xl:h-72">
               <Plot
                 data={[
-                  { x: histogram.bin_centers, y: histogram.densities, type: 'bar', marker: { color: '#cbd5e1' } },
+                  { x: histogram.bin_centers, y: histogram.densities, type: 'bar', marker: { color: isDark ? '#475569' : '#cbd5e1' } },
                   { x: histogram.x_span, y: histogram.norm_pdf, type: 'scatter', mode: 'lines', line: { color: '#10b981', width: 1.8 } }
                 ]}
-                layout={{ autosize: true, margin: { l: 30, r: 10, t: 10, b: 25 }, showlegend: false, paper_bgcolor: 'transparent', plot_bgcolor: 'transparent' }}
+                layout={{
+                  autosize: true,
+                  margin: { l: 30, r: 10, t: 10, b: 25 },
+                  showlegend: false,
+                  xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                  yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                  paper_bgcolor: 'transparent',
+                  plot_bgcolor: 'transparent',
+                  font: { color: isDark ? '#cbd5e1' : '#334155' }
+                }}
                 useResizeHandler={true}
                 style={{ width: '100%', height: '100%' }}
                 config={{ responsive: true, displayModeBar: false }}
@@ -1173,10 +1212,10 @@ const SimplePlaygroundPage: React.FC = () => {
   const renderComparisonView = () => {
     if (loadingComparison) {
       return (
-        <div className="h-[420px] flex flex-col items-center justify-center text-slate-500 text-sm space-y-3">
+        <div className="h-[420px] flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 text-sm space-y-3">
           <div className="animate-spin rounded-full h-8 w-8 border-3 border-indigo-600 border-t-transparent"></div>
-          <p className="font-semibold text-slate-700">Benchmarking Candidate Models...</p>
-          <p className="text-xs text-slate-400">Fitting ARIMA, SARIMA, Holt-Winters, and Moving Average concurrently</p>
+          <p className="font-semibold text-slate-700 dark:text-slate-200">Benchmarking Candidate Models...</p>
+          <p className="text-xs text-slate-400 dark:text-slate-500">Fitting ARIMA, SARIMA, Holt-Winters, and Moving Average concurrently</p>
         </div>
       );
     }
@@ -1184,17 +1223,17 @@ const SimplePlaygroundPage: React.FC = () => {
     if (!comparisonData || !comparisonData.results) {
       return (
         <div className="h-[420px] flex flex-col items-center justify-center text-center p-8">
-          <div className="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4 shadow-xs">
+          <div className="w-14 h-14 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 rounded-2xl flex items-center justify-center mb-4 shadow-xs">
             <Trophy className="w-7 h-7" />
           </div>
-          <h3 className="text-base font-bold text-slate-800 mb-1.5">AutoML Time Series Benchmarking</h3>
-          <p className="text-xs text-slate-500 max-w-md mb-5 leading-relaxed">
-            Concurrently train and benchmark ARIMA, SARIMA, Holt-Winters, and Moving Average models on <span className="font-semibold text-slate-700">{currentData?.title || 'this dataset'}</span> to automatically determine the highest-performing model based on RMSE, MAE, and MAPE.
+          <h3 className="text-base font-bold text-slate-800 dark:text-white mb-1.5">AutoML Time Series Benchmarking</h3>
+          <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mb-5 leading-relaxed">
+            Concurrently train and benchmark ARIMA, SARIMA, Holt-Winters, and Moving Average models on <span className="font-semibold text-slate-700 dark:text-slate-300">{currentData?.title || 'this dataset'}</span> to automatically determine the highest-performing model based on RMSE, MAE, and MAPE.
           </p>
           <button
             onClick={runModelComparison}
             disabled={!backendConnected || !currentData}
-            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100 flex items-center space-x-2 transition-all cursor-pointer"
+            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white rounded-xl text-xs font-bold shadow-md shadow-indigo-100 dark:shadow-none flex items-center space-x-2 transition-all cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-amber-300" />
             <span>Benchmark All Models Now</span>
@@ -1225,7 +1264,7 @@ const SimplePlaygroundPage: React.FC = () => {
         type: 'scatter',
         mode: 'lines',
         name: 'Historical Actual',
-        line: { color: '#334155', width: 2 }
+        line: { color: isDark ? '#64748b' : '#334155', width: 2 }
       }
     ];
 
@@ -1248,22 +1287,22 @@ const SimplePlaygroundPage: React.FC = () => {
     return (
       <div className="space-y-4">
         {/* Winner Highlight Card */}
-        <div className="bg-gradient-to-r from-indigo-50/80 via-purple-50/50 to-emerald-50/80 p-3.5 rounded-2xl border border-indigo-100/80 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-indigo-50/80 via-purple-50/50 to-emerald-50/80 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-emerald-950/40 p-3.5 rounded-2xl border border-indigo-100/80 dark:border-indigo-900/50 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-amber-400/20 text-amber-600 rounded-xl flex items-center justify-center font-bold">
-              <Trophy className="w-5 h-5 text-amber-600" />
+            <div className="w-10 h-10 bg-amber-400/20 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center font-bold">
+              <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400" />
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-100/70 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 dark:text-indigo-300 bg-indigo-100/70 dark:bg-indigo-900/60 px-2 py-0.5 rounded-full">
                   Top Performing Model
                 </span>
-                <span className="text-xs font-extrabold text-slate-800 uppercase font-mono">
+                <span className="text-xs font-extrabold text-slate-800 dark:text-white uppercase font-mono">
                   {best_model}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-600 mt-0.5">
-                Achieved lowest RMSE of <strong className="font-mono text-slate-900">{bestResult?.metrics?.rmse?.toFixed(3) || 'N/A'}</strong> and MAE of <strong className="font-mono text-slate-900">{bestResult?.metrics?.mae?.toFixed(3) || 'N/A'}</strong>.
+              <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                Achieved lowest RMSE of <strong className="font-mono text-slate-900 dark:text-white">{bestResult?.metrics?.rmse?.toFixed(3) || 'N/A'}</strong> and MAE of <strong className="font-mono text-slate-900 dark:text-white">{bestResult?.metrics?.mae?.toFixed(3) || 'N/A'}</strong>.
               </p>
             </div>
           </div>
@@ -1275,14 +1314,14 @@ const SimplePlaygroundPage: React.FC = () => {
                 setViewMode('forecast');
                 showToast(`Switched active model to ${best_model.toUpperCase()}`);
               }}
-              className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center space-x-1"
+              className="px-3.5 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center space-x-1 cursor-pointer"
             >
               <span>Use as Active Model</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
             <button
               onClick={runModelComparison}
-              className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-white rounded-lg transition-colors cursor-pointer"
+              className="p-1.5 text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-white dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
               title="Re-run benchmark"
             >
               <Sparkles className="w-4 h-4" />
@@ -1291,10 +1330,10 @@ const SimplePlaygroundPage: React.FC = () => {
         </div>
 
         {/* Multi-Model Comparative Forecast Plot */}
-        <div className="bg-slate-50/50 p-2.5 rounded-xl border border-slate-200/70">
+        <div className="bg-slate-50/50 dark:bg-slate-800/40 p-2.5 rounded-xl border border-slate-200/70 dark:border-slate-800">
           <div className="flex justify-between items-center px-1 mb-1">
-            <span className="text-[11px] font-bold text-slate-700">Comparative Forecast Overlay</span>
-            <span className="text-[10px] text-slate-400">Toggle traces in legend to inspect individual forecasts</span>
+            <span className="text-[11px] font-bold text-slate-700 dark:text-slate-200">Comparative Forecast Overlay</span>
+            <span className="text-[10px] text-slate-400 dark:text-slate-500">Toggle traces in legend to inspect individual forecasts</span>
           </div>
           <div className="h-[380px] xl:h-[440px]">
             <Plot
@@ -1303,11 +1342,12 @@ const SimplePlaygroundPage: React.FC = () => {
                 autosize: true,
                 margin: { l: 40, r: 15, t: 15, b: 30 },
                 hovermode: 'x unified',
-                legend: { orientation: 'h', y: 1.15, x: 0, font: { size: 10 } },
-                xaxis: { showgrid: true, gridcolor: '#f1f5f9' },
-                yaxis: { showgrid: true, gridcolor: '#f1f5f9' },
+                legend: { orientation: 'h', y: 1.15, x: 0, font: { size: 10, color: isDark ? '#cbd5e1' : '#334155' } },
+                xaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
+                yaxis: { showgrid: true, gridcolor: isDark ? '#334155' : '#f1f5f9', tickfont: { color: isDark ? '#94a3b8' : '#64748b' } },
                 paper_bgcolor: 'transparent',
-                plot_bgcolor: 'transparent'
+                plot_bgcolor: 'transparent',
+                font: { color: isDark ? '#cbd5e1' : '#334155' }
               }}
               useResizeHandler={true}
               style={{ width: '100%', height: '100%' }}
@@ -1317,48 +1357,48 @@ const SimplePlaygroundPage: React.FC = () => {
         </div>
 
         {/* Detailed Leaderboard Table */}
-        <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
+        <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden text-xs">
           <table className="w-full text-left">
-            <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+            <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 font-semibold border-b border-slate-200 dark:border-slate-750">
               <tr>
                 <th className="p-2.5">Rank</th>
                 <th className="p-2.5">Model</th>
                 <th className="p-2.5 font-mono text-right" title="Root Mean Squared Error: √[(1/n) Σ(y - ŷ)²]">
-                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">RMSE ⓘ</span>
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400">RMSE ⓘ</span>
                 </th>
                 <th className="p-2.5 font-mono text-right" title="Mean Absolute Error: (1/n) Σ|y - ŷ|">
-                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">MAE ⓘ</span>
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400">MAE ⓘ</span>
                 </th>
                 <th className="p-2.5 font-mono text-right" title="Mean Absolute Percentage Error: (100%/n) Σ|(y - ŷ)/y|">
-                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600">MAPE (%) ⓘ</span>
+                  <span className="cursor-help border-b border-dotted border-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400">MAPE (%) ⓘ</span>
                 </th>
                 <th className="p-2.5 text-center">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-mono">
+            <tbody className="divide-y divide-slate-100 dark:divide-slate-850 font-mono">
               {rankedModels.map((m: any, idx: number) => {
                 const isWinner = m.model_type === best_model;
                 return (
-                  <tr key={idx} className={isWinner ? 'bg-indigo-50/50 font-bold text-indigo-950' : 'text-slate-700 hover:bg-slate-50/60'}>
+                  <tr key={idx} className={isWinner ? 'bg-indigo-50/50 dark:bg-indigo-950/40 font-bold text-indigo-950 dark:text-indigo-200' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50/60 dark:hover:bg-slate-800/60'}>
                     <td className="p-2.5 font-sans">
                       {idx === 0 ? (
-                        <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                        <span className="bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
                           🥇 #1 Winner
                         </span>
                       ) : (
-                        <span className="text-slate-400 font-mono">#{idx + 1}</span>
+                        <span className="text-slate-400 dark:text-slate-500 font-mono">#{idx + 1}</span>
                       )}
                     </td>
-                    <td className="p-2.5 uppercase font-bold text-slate-800">
+                    <td className="p-2.5 uppercase font-bold text-slate-800 dark:text-white">
                       {m.model_type}
                     </td>
-                    <td className="p-2.5 text-right font-bold text-indigo-600">
+                    <td className="p-2.5 text-right font-bold text-indigo-600 dark:text-indigo-400">
                       {m.rmse !== null ? m.rmse.toFixed(3) : 'N/A'}
                     </td>
-                    <td className="p-2.5 text-right text-slate-600">
+                    <td className="p-2.5 text-right text-slate-600 dark:text-slate-300">
                       {m.mae !== null ? m.mae.toFixed(3) : 'N/A'}
                     </td>
-                    <td className="p-2.5 text-right text-slate-600">
+                    <td className="p-2.5 text-right text-slate-600 dark:text-slate-300">
                       {m.mape !== null ? `${m.mape.toFixed(2)}%` : 'N/A'}
                     </td>
                     <td className="p-2.5 text-center font-sans">
@@ -1368,10 +1408,10 @@ const SimplePlaygroundPage: React.FC = () => {
                           setViewMode('forecast');
                           showToast(`Selected ${m.model_type.toUpperCase()}`);
                         }}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all ${
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer ${
                           isWinner
                             ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                            : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200'
                         }`}
                       >
                         Select Model
@@ -1388,10 +1428,10 @@ const SimplePlaygroundPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans antialiased">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans antialiased transition-colors duration-200">
       {/* Toast Alert */}
       {toastMessage && (
-        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-medium border border-slate-700 animate-fade-in">
+        <div className="fixed bottom-5 right-5 z-50 bg-slate-900 dark:bg-slate-800 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2 text-xs font-medium border border-slate-700 animate-fade-in">
           <Sparkles className="w-4 h-4 text-amber-400" />
           <span>{toastMessage}</span>
         </div>
@@ -1399,26 +1439,26 @@ const SimplePlaygroundPage: React.FC = () => {
 
       {/* Auto-ARIMA Modal */}
       {showAutoArimaModal && autoArimaResults && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-200 dark:border-slate-800">
             <div className="flex justify-between items-center mb-3">
               <div className="flex items-center space-x-2">
-                <Cpu className="w-5 h-5 text-indigo-600" />
-                <h3 className="font-bold text-sm text-slate-800">Auto-ARIMA Optimization (AIC)</h3>
+                <Cpu className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                <h3 className="font-bold text-sm text-slate-800 dark:text-white">Auto-ARIMA Optimization (AIC)</h3>
               </div>
-              <button onClick={() => setShowAutoArimaModal(false)} className="text-slate-400 hover:text-slate-600 text-sm">✕</button>
+              <button onClick={() => setShowAutoArimaModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 text-sm">✕</button>
             </div>
-            <p className="text-xs text-slate-500 mb-3">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
               Evaluated combinations of AR(p), Diff(d), and MA(q) orders. Selected order minimizes Akaike Information Criterion:
             </p>
-            <div className="max-h-52 overflow-y-auto border border-slate-200 rounded-xl mb-3 text-xs">
+            <div className="max-h-52 overflow-y-auto border border-slate-200 dark:border-slate-800 rounded-xl mb-3 text-xs">
               <table className="w-full text-left">
-                <thead className="bg-slate-50 text-slate-600 font-semibold sticky top-0">
+                <thead className="bg-slate-50 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 font-semibold sticky top-0">
                   <tr><th className="p-2">Rank</th><th className="p-2">Order</th><th className="p-2">AIC</th></tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-mono">
+                <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-mono">
                   {autoArimaResults.candidates.map((cand: any, idx: number) => (
-                    <tr key={idx} className={idx === 0 ? 'bg-emerald-50 text-emerald-900 font-bold' : 'text-slate-700'}>
+                    <tr key={idx} className={idx === 0 ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-300 font-bold' : 'text-slate-700 dark:text-slate-300'}>
                       <td className="p-2">{idx === 0 ? '🏆 Best' : `#${idx + 1}`}</td>
                       <td className="p-2">ARIMA({cand.order.join(',')})</td>
                       <td className="p-2">{cand.aic.toFixed(2)}</td>
@@ -1438,37 +1478,40 @@ const SimplePlaygroundPage: React.FC = () => {
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-slate-200/80 sticky top-0 z-30">
+      <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 sticky top-0 z-30 transition-colors">
         <div className="w-full px-4 sm:px-6 py-2.5 flex items-center justify-between">
           <div className="flex items-center space-x-6">
-            <Link to="/" className="flex items-center space-x-2 text-base font-bold text-slate-900">
+            <Link to="/" className="flex items-center space-x-2 text-base font-bold text-slate-900 dark:text-white">
               <div className="w-7 h-7 bg-indigo-600 text-white rounded-lg flex items-center justify-center font-black text-sm">
                 A
               </div>
               <span>ATSA Playground</span>
             </Link>
             <nav className="flex space-x-1">
-              <Link to="/" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+              <Link to="/" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 Home
               </Link>
-              <Link to="/playground" className="px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 bg-indigo-50/80">
+              <Link to="/playground" className="px-3 py-1.5 rounded-lg text-xs font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50/80 dark:bg-indigo-950/60">
                 Workspace
               </Link>
-              <Link to="/learn" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+              <Link to="/learn" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
                 Academy
               </Link>
             </nav>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${backendConnected ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700'}`}>
+          <div className="flex items-center space-x-2.5">
+            <div className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${backendConnected ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800' : 'bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800'}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${backendConnected ? 'bg-emerald-500' : 'bg-amber-500'}`}></span>
               <span>{backendConnected ? 'Engine Live' : 'GitHub Pages Demo'}</span>
             </div>
+
+            <ThemeToggle />
+
             <button
               onClick={handleExportCSV}
               disabled={!analysisResult}
-              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center space-x-1.5 transition-colors disabled:opacity-50 cursor-pointer"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg flex items-center space-x-1.5 transition-colors disabled:opacity-50 cursor-pointer border border-transparent dark:border-slate-700"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export CSV</span>
@@ -1480,19 +1523,19 @@ const SimplePlaygroundPage: React.FC = () => {
       {/* Main Workspace (Edge-to-Edge Full-Screen) */}
       <main className="w-full px-4 sm:px-6 py-3.5 space-y-3">
         {/* Top Metric Strip (Bloomberg/Stripe style horizontal KPI ribbon) */}
-        <div className="bg-white rounded-xl border border-slate-200/80 px-4 py-2.5 shadow-xs flex items-center justify-between text-xs">
+        <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200/80 dark:border-slate-800 px-4 py-2.5 shadow-xs flex items-center justify-between text-xs">
           <div className="flex items-center space-x-6">
             <div className="flex items-center space-x-2">
-              <span className="text-slate-400 font-medium">Dataset:</span>
-              <span className="font-semibold text-slate-800">{currentData?.title || currentData?.name || 'None'}</span>
-              <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+              <span className="text-slate-400 dark:text-slate-500 font-medium">Dataset:</span>
+              <span className="font-semibold text-slate-800 dark:text-slate-100">{currentData?.title || currentData?.name || 'None'}</span>
+              <span className="text-[10px] font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-1.5 py-0.5 rounded">
                 {currentData?.records?.length || 0} obs
               </span>
             </div>
-            <div className="h-3.5 w-px bg-slate-200"></div>
+            <div className="h-3.5 w-px bg-slate-200 dark:bg-slate-800"></div>
             <div className="flex items-center space-x-2">
-              <span className="text-slate-400 font-medium">Active Model:</span>
-              <span className="font-mono font-bold text-indigo-600 uppercase">
+              <span className="text-slate-400 dark:text-slate-500 font-medium">Active Model:</span>
+              <span className="font-mono font-bold text-indigo-600 dark:text-indigo-400 uppercase">
                 {selectedModel}
                 {selectedModel === 'arima' && `(${arimaOrder.p},${arimaOrder.d},${arimaOrder.q})`}
               </span>
@@ -1503,17 +1546,17 @@ const SimplePlaygroundPage: React.FC = () => {
             {analysisResult?.metrics && (
               <>
                 <div>
-                  <span className="text-slate-400 mr-1.5 font-sans font-medium text-[11px]">RMSE:</span>
-                  <span className="font-bold text-slate-800">{analysisResult.metrics.rmse ? analysisResult.metrics.rmse.toFixed(3) : 'N/A'}</span>
+                  <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-sans font-medium text-[11px]">RMSE:</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-100">{analysisResult.metrics.rmse ? analysisResult.metrics.rmse.toFixed(3) : 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 mr-1.5 font-sans font-medium text-[11px]">MAE:</span>
-                  <span className="font-bold text-slate-800">{analysisResult.metrics.mae ? analysisResult.metrics.mae.toFixed(3) : 'N/A'}</span>
+                  <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-sans font-medium text-[11px]">MAE:</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-100">{analysisResult.metrics.mae ? analysisResult.metrics.mae.toFixed(3) : 'N/A'}</span>
                 </div>
                 {analysisResult.model_info?.aic && (
                   <div>
-                    <span className="text-slate-400 mr-1.5 font-sans font-medium text-[11px]">AIC:</span>
-                    <span className="font-bold text-slate-800">{analysisResult.model_info.aic.toFixed(1)}</span>
+                    <span className="text-slate-400 dark:text-slate-500 mr-1.5 font-sans font-medium text-[11px]">AIC:</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-100">{analysisResult.model_info.aic.toFixed(1)}</span>
                   </div>
                 )}
               </>
@@ -1526,25 +1569,25 @@ const SimplePlaygroundPage: React.FC = () => {
           {/* Left Column: Fixed Width Sidebar */}
           <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0 space-y-3">
             {/* Model & Config Card */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs space-y-3.5">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs space-y-3.5">
               {/* Dataset Selection */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                  <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                     1. Data Source
                   </label>
-                  <div className="flex space-x-1 p-0.5 bg-slate-100 rounded-lg text-[10px] font-semibold">
+                  <div className="flex space-x-1 p-0.5 bg-slate-100 dark:bg-slate-800 rounded-lg text-[10px] font-semibold">
                     <button
                       type="button"
                       onClick={() => setDataMode('preset')}
-                      className={`px-2 py-0.5 rounded-md transition-all ${dataMode === 'preset' ? 'bg-white text-indigo-600 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                      className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${dataMode === 'preset' ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-2xs font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
                     >
                       Presets / CSV
                     </button>
                     <button
                       type="button"
                       onClick={() => setDataMode('yfinance')}
-                      className={`px-2 py-0.5 rounded-md flex items-center space-x-1 transition-all ${dataMode === 'yfinance' ? 'bg-white text-emerald-600 shadow-2xs font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                      className={`px-2 py-0.5 rounded-md flex items-center space-x-1 transition-all cursor-pointer ${dataMode === 'yfinance' ? 'bg-white dark:bg-slate-700 text-emerald-600 dark:text-emerald-400 shadow-2xs font-bold' : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'}`}
                     >
                       <Globe className="w-2.5 h-2.5" />
                       <span>Live yfinance</span>
@@ -1557,7 +1600,7 @@ const SimplePlaygroundPage: React.FC = () => {
                     <select
                       value={selectedDatasetName}
                       onChange={(e) => loadDatasetByName(e.target.value)}
-                      className="w-full text-xs p-2 bg-slate-50 border border-slate-200 rounded-xl font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                      className="w-full text-xs p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-xl font-medium focus:outline-none focus:ring-1 focus:ring-indigo-500 cursor-pointer"
                     >
                       {sampleDatasets.map((ds) => (
                         <option key={ds.name} value={ds.name}>
@@ -1570,13 +1613,13 @@ const SimplePlaygroundPage: React.FC = () => {
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
                       title="Upload custom CSV"
-                      className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs transition-colors shrink-0 cursor-pointer"
+                      className="p-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs transition-colors shrink-0 cursor-pointer border border-transparent dark:border-slate-700"
                     >
                       <Upload className="w-4 h-4" />
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-2 p-2.5 bg-emerald-50/40 border border-emerald-100 rounded-xl">
+                  <div className="space-y-2 p-2.5 bg-emerald-50/40 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900/50 rounded-xl">
                     <div className="flex space-x-1.5">
                       <div className="relative flex-1">
                         <input
@@ -1587,14 +1630,14 @@ const SimplePlaygroundPage: React.FC = () => {
                             if (e.key === 'Enter') fetchMarketData();
                           }}
                           placeholder="Ticker (e.g. AAPL, NVDA, TCS.NS)"
-                          className="w-full text-xs pl-7 pr-2 py-1.5 bg-white border border-slate-200 rounded-lg font-mono font-bold uppercase placeholder:normal-case placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                          className="w-full text-xs pl-7 pr-2 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-lg font-mono font-bold uppercase placeholder:normal-case placeholder:font-normal placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
                         />
                         <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2 top-2" />
                       </div>
                       <select
                         value={tickerPeriod}
                         onChange={(e) => setTickerPeriod(e.target.value)}
-                        className="text-xs px-2 py-1.5 bg-white border border-slate-200 rounded-lg font-mono font-semibold"
+                        className="text-xs px-2 py-1.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-lg font-mono font-semibold"
                       >
                         <option value="6mo">6M</option>
                         <option value="1y">1Y</option>
@@ -1616,8 +1659,8 @@ const SimplePlaygroundPage: React.FC = () => {
                     </div>
 
                     {/* Popular Ticker Presets */}
-                    <div className="flex flex-wrap gap-1 items-center pt-1 border-t border-emerald-100/60">
-                      <span className="text-[10px] text-slate-400 font-medium mr-1">Popular:</span>
+                    <div className="flex flex-wrap gap-1 items-center pt-1 border-t border-emerald-100/60 dark:border-emerald-900/40">
+                      <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium mr-1">Popular:</span>
                       {['AAPL', 'NVDA', 'TSLA', 'MSFT', 'RELIANCE.NS', 'BTC-USD'].map((tick) => (
                         <button
                           type="button"
@@ -1626,7 +1669,7 @@ const SimplePlaygroundPage: React.FC = () => {
                             setTickerSymbol(tick);
                             fetchMarketData(tick);
                           }}
-                          className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded transition-all cursor-pointer ${tickerSymbol === tick ? 'bg-emerald-600 text-white' : 'bg-white hover:bg-emerald-100 text-slate-700 border border-slate-200/60'}`}
+                          className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded transition-all cursor-pointer ${tickerSymbol === tick ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700'}`}
                         >
                           {tick}
                         </button>
@@ -1639,12 +1682,12 @@ const SimplePlaygroundPage: React.FC = () => {
               {/* Model Family */}
               <div>
                 <div className="flex justify-between items-center mb-1.5">
-                  <label className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">2. Model Selection</label>
+                  <label className="text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">2. Model Selection</label>
                   {selectedModel === 'arima' && (
                     <button
                       onClick={runAutoArimaSearch}
                       disabled={loadingAutoArima || !currentData}
-                      className="text-[11px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center space-x-1"
+                      className="text-[11px] text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-bold flex items-center space-x-1 cursor-pointer"
                     >
                       <Cpu className="w-3 h-3" />
                       <span>{loadingAutoArima ? 'Searching...' : 'Auto-Fit (p,d,q)'}</span>
@@ -1652,7 +1695,7 @@ const SimplePlaygroundPage: React.FC = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100/70 rounded-xl">
+                <div className="grid grid-cols-2 gap-1.5 p-1 bg-slate-100/70 dark:bg-slate-800/70 rounded-xl">
                   {[
                     { id: 'arima', label: 'ARIMA' },
                     { id: 'sarima', label: 'SARIMA' },
@@ -1662,10 +1705,10 @@ const SimplePlaygroundPage: React.FC = () => {
                     <button
                       key={m.id}
                       onClick={() => setSelectedModel(m.id)}
-                      className={`py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                      className={`py-1.5 text-xs font-semibold rounded-lg transition-all cursor-pointer ${
                         selectedModel === m.id
-                          ? 'bg-white text-indigo-600 shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900'
+                          ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-xs font-bold'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
                       }`}
                     >
                       {m.label}
@@ -1674,41 +1717,41 @@ const SimplePlaygroundPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Model Parameter Controls (Clean Stepper / Inputs) */}
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/70 space-y-2.5">
+              {/* Model Parameter Controls */}
+              <div className="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200/70 dark:border-slate-800 space-y-2.5">
                 {selectedModel === 'arima' && (
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">p (AR)</span>
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">p (AR)</span>
                       <input
                         type="number"
                         min="0"
                         max="10"
                         value={arimaOrder.p}
                         onChange={(e) => setArimaOrder({ ...arimaOrder, p: parseInt(e.target.value) || 0 })}
-                        className="w-full text-xs p-1 bg-white border border-slate-200 rounded text-center font-mono font-bold mt-0.5"
+                        className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono font-bold mt-0.5"
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">d (Diff)</span>
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">d (Diff)</span>
                       <input
                         type="number"
                         min="0"
                         max="2"
                         value={arimaOrder.d}
                         onChange={(e) => setArimaOrder({ ...arimaOrder, d: parseInt(e.target.value) || 0 })}
-                        className="w-full text-xs p-1 bg-white border border-slate-200 rounded text-center font-mono font-bold mt-0.5"
+                        className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono font-bold mt-0.5"
                       />
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">q (MA)</span>
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">q (MA)</span>
                       <input
                         type="number"
                         min="0"
                         max="10"
                         value={arimaOrder.q}
                         onChange={(e) => setArimaOrder({ ...arimaOrder, q: parseInt(e.target.value) || 0 })}
-                        className="w-full text-xs p-1 bg-white border border-slate-200 rounded text-center font-mono font-bold mt-0.5"
+                        className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono font-bold mt-0.5"
                       />
                     </div>
                   </div>
@@ -1719,33 +1762,33 @@ const SimplePlaygroundPage: React.FC = () => {
                     <div className="grid grid-cols-3 gap-2">
                       <div>
                         <span className="text-[10px] font-semibold text-slate-400">p</span>
-                        <input type="number" min="0" value={sarimaOrder.p} onChange={(e) => setSarimaOrder({ ...sarimaOrder, p: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.p} onChange={(e) => setSarimaOrder({ ...sarimaOrder, p: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                       <div>
                         <span className="text-[10px] font-semibold text-slate-400">d</span>
-                        <input type="number" min="0" value={sarimaOrder.d} onChange={(e) => setSarimaOrder({ ...sarimaOrder, d: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.d} onChange={(e) => setSarimaOrder({ ...sarimaOrder, d: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                       <div>
                         <span className="text-[10px] font-semibold text-slate-400">q</span>
-                        <input type="number" min="0" value={sarimaOrder.q} onChange={(e) => setSarimaOrder({ ...sarimaOrder, q: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.q} onChange={(e) => setSarimaOrder({ ...sarimaOrder, q: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                     </div>
-                    <div className="grid grid-cols-4 gap-1.5 pt-1 border-t border-slate-200/60">
+                    <div className="grid grid-cols-4 gap-1.5 pt-1 border-t border-slate-200/60 dark:border-slate-750">
                       <div>
                         <span className="text-[9px] font-semibold text-slate-400">P</span>
-                        <input type="number" min="0" value={sarimaOrder.P} onChange={(e) => setSarimaOrder({ ...sarimaOrder, P: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.P} onChange={(e) => setSarimaOrder({ ...sarimaOrder, P: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                       <div>
                         <span className="text-[9px] font-semibold text-slate-400">D</span>
-                        <input type="number" min="0" value={sarimaOrder.D} onChange={(e) => setSarimaOrder({ ...sarimaOrder, D: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.D} onChange={(e) => setSarimaOrder({ ...sarimaOrder, D: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                       <div>
                         <span className="text-[9px] font-semibold text-slate-400">Q</span>
-                        <input type="number" min="0" value={sarimaOrder.Q} onChange={(e) => setSarimaOrder({ ...sarimaOrder, Q: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="0" value={sarimaOrder.Q} onChange={(e) => setSarimaOrder({ ...sarimaOrder, Q: parseInt(e.target.value) || 0 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                       <div>
                         <span className="text-[9px] font-semibold text-slate-400">s</span>
-                        <input type="number" min="2" value={sarimaOrder.s} onChange={(e) => setSarimaOrder({ ...sarimaOrder, s: parseInt(e.target.value) || 12 })} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                        <input type="number" min="2" value={sarimaOrder.s} onChange={(e) => setSarimaOrder({ ...sarimaOrder, s: parseInt(e.target.value) || 12 })} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                       </div>
                     </div>
                   </div>
@@ -1754,41 +1797,41 @@ const SimplePlaygroundPage: React.FC = () => {
                 {selectedModel === 'holt_winters' && (
                   <div className="grid grid-cols-3 gap-2">
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">Trend</span>
-                      <select value={hwTrend} onChange={(e) => setHwTrend(e.target.value)} className="w-full text-xs p-1 bg-white border rounded">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Trend</span>
+                      <select value={hwTrend} onChange={(e) => setHwTrend(e.target.value)} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded">
                         <option value="add">Add</option>
                         <option value="none">None</option>
                       </select>
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">Season</span>
-                      <select value={hwSeasonal} onChange={(e) => setHwSeasonal(e.target.value)} className="w-full text-xs p-1 bg-white border rounded">
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Season</span>
+                      <select value={hwSeasonal} onChange={(e) => setHwSeasonal(e.target.value)} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded">
                         <option value="add">Add</option>
                         <option value="none">None</option>
                       </select>
                     </div>
                     <div>
-                      <span className="text-[10px] font-bold text-slate-500">Period (s)</span>
-                      <input type="number" min="2" value={hwPeriods} onChange={(e) => setHwPeriods(parseInt(e.target.value) || 12)} className="w-full text-xs p-1 bg-white border rounded text-center font-mono" />
+                      <span className="text-[10px] font-bold text-slate-500 dark:text-slate-400">Period (s)</span>
+                      <input type="number" min="2" value={hwPeriods} onChange={(e) => setHwPeriods(parseInt(e.target.value) || 12)} className="w-full text-xs p-1 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded text-center font-mono" />
                     </div>
                   </div>
                 )}
 
                 {selectedModel === 'moving_average' && (
                   <div>
-                    <div className="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                    <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">
                       <span>Window Size:</span>
-                      <span className="font-mono text-indigo-600">{maWindow}</span>
+                      <span className="font-mono text-indigo-600 dark:text-indigo-400">{maWindow}</span>
                     </div>
                     <input type="range" min="2" max="30" value={maWindow} onChange={(e) => setMaWindow(parseInt(e.target.value))} className="w-full accent-indigo-600" />
                   </div>
                 )}
 
                 {/* Horizon Slider */}
-                <div className="pt-2 border-t border-slate-200/60">
-                  <div className="flex justify-between text-[11px] font-semibold text-slate-600 mb-1">
+                <div className="pt-2 border-t border-slate-200/60 dark:border-slate-750">
+                  <div className="flex justify-between text-[11px] font-semibold text-slate-600 dark:text-slate-300 mb-1">
                     <span>Forecast Horizon:</span>
-                    <span className="font-mono text-indigo-600">{forecastPeriods} steps</span>
+                    <span className="font-mono text-indigo-600 dark:text-indigo-400">{forecastPeriods} steps</span>
                   </div>
                   <input
                     type="range"
@@ -1806,7 +1849,7 @@ const SimplePlaygroundPage: React.FC = () => {
                 type="button"
                 onClick={runAnalysis}
                 disabled={!backendConnected || !currentData || isAnalyzing}
-                className={`w-full py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-xs ${
+                className={`w-full py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center space-x-2 transition-all shadow-xs cursor-pointer ${
                   isAnalyzing
                     ? 'bg-indigo-400 text-white cursor-wait'
                     : 'bg-indigo-600 hover:bg-indigo-700 text-white'
@@ -1833,15 +1876,15 @@ const SimplePlaygroundPage: React.FC = () => {
                   if (!comparisonData) runModelComparison();
                 }}
                 disabled={!backendConnected || !currentData}
-                className="w-full py-1.5 px-3 bg-slate-50 hover:bg-indigo-50/60 border border-slate-200/80 hover:border-indigo-200 text-slate-700 hover:text-indigo-700 rounded-xl font-semibold text-[11px] flex items-center justify-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full py-1.5 px-3 bg-slate-50 dark:bg-slate-800 hover:bg-indigo-50/60 dark:hover:bg-indigo-950/40 border border-slate-200/80 dark:border-slate-700 hover:border-indigo-200 dark:hover:border-indigo-800 text-slate-700 dark:text-slate-300 hover:text-indigo-700 dark:hover:text-indigo-300 rounded-xl font-semibold text-[11px] flex items-center justify-center space-x-1.5 transition-all cursor-pointer disabled:opacity-50"
               >
                 <Trophy className="w-3.5 h-3.5 text-amber-500" />
                 <span>Benchmark All Models</span>
               </button>
 
               {/* Holdout Backtesting Toggle */}
-              <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                <div className="flex items-center space-x-1.5 text-slate-600">
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                <div className="flex items-center space-x-1.5 text-slate-600 dark:text-slate-300">
                   <Target className="w-3.5 h-3.5 text-slate-400" />
                   <span className="font-medium">Holdout Backtest</span>
                 </div>
@@ -1858,7 +1901,7 @@ const SimplePlaygroundPage: React.FC = () => {
           {/* Right Column: Clean Unified Full-Width Canvas */}
           <div className="flex-1 min-w-0 w-full space-y-3">
             {/* 4 Macro Modes (Segmented Clean Navigation) */}
-            <div className="flex items-center justify-between bg-white p-1 rounded-xl border border-slate-200/80 shadow-xs">
+            <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-1 rounded-xl border border-slate-200/80 dark:border-slate-800 shadow-xs">
               <div className="flex space-x-1">
                 {[
                   { id: 'forecast', label: '🔮 Forecast & Backtest' },
@@ -1869,10 +1912,10 @@ const SimplePlaygroundPage: React.FC = () => {
                   <button
                     key={mode.id}
                     onClick={() => setViewMode(mode.id as any)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       viewMode === mode.id
                         ? 'bg-indigo-600 text-white shadow-xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-800'
                     }`}
                   >
                     {mode.label}
@@ -1880,7 +1923,7 @@ const SimplePlaygroundPage: React.FC = () => {
                 ))}
                 <button
                   onClick={() => setIsShortcutsOpen(true)}
-                  className="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors flex items-center space-x-1"
+                  className="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center space-x-1 cursor-pointer"
                   title="Keyboard Shortcuts (?)"
                 >
                   <Keyboard className="w-3.5 h-3.5" />
@@ -1890,7 +1933,7 @@ const SimplePlaygroundPage: React.FC = () => {
             </div>
 
             {/* Dynamic View Canvas */}
-            <div className="bg-white rounded-2xl p-4 border border-slate-200/80 shadow-xs min-h-[560px] xl:min-h-[620px]">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-4 border border-slate-200/80 dark:border-slate-800 shadow-xs min-h-[560px] xl:min-h-[620px]">
               {viewMode === 'forecast' && renderForecastOrBacktestPlot()}
               {viewMode === 'comparison' && renderComparisonView()}
               {viewMode === 'exploration' && renderExplorationView()}

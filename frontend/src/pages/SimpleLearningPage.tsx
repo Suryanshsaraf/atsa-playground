@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import API from '../services/api';
+import { ThemeToggle } from '../components/common/ThemeToggle';
 
 const CodeBlock: React.FC<{ code: string }> = ({ code }) => {
   const [copied, setCopied] = useState(false);
@@ -43,7 +44,7 @@ const FormattedSectionContent: React.FC<{ content: string }> = ({ content }) => 
   const parts = content.split('```');
 
   return (
-    <div className="space-y-3 text-sm leading-relaxed text-slate-700">
+    <div className="space-y-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
       {parts.map((part, idx) => {
         if (idx % 2 === 1) {
           return <CodeBlock key={idx} code={part} />;
@@ -234,19 +235,29 @@ const LearningPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-200">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link to="/" className="text-2xl font-bold text-blue-600">🎯 ATSA Playground</Link>
-              <nav className="hidden md:flex space-x-6">
-                <Link to="/" className="text-gray-600 hover:text-blue-600">Home</Link>
-                <Link to="/playground" className="text-gray-600 hover:text-blue-600">Playground</Link>
-                <Link to="/learn" className="text-blue-600 font-medium">Learn</Link>
-              </nav>
-            </div>
+      <header className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-xs border-b border-gray-200/80 dark:border-slate-800 sticky top-0 z-30 transition-colors">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center space-x-6">
+            <Link to="/" className="text-xl font-bold text-blue-600 dark:text-blue-400 flex items-center space-x-2">
+              <span>🎯 ATSA Playground</span>
+            </Link>
+            <nav className="hidden md:flex space-x-4">
+              <Link to="/" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                Home
+              </Link>
+              <Link to="/playground" className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+                Workspace
+              </Link>
+              <Link to="/learn" className="px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-600 dark:text-blue-400 bg-blue-50/80 dark:bg-blue-950/60">
+                Academy
+              </Link>
+            </nav>
+          </div>
+
+          <div className="flex items-center space-x-2.5">
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -256,34 +267,34 @@ const LearningPage: React.FC = () => {
           <div>
             {/* Learning Overview */}
             <div className="text-center mb-12">
-              <h1 className="text-4xl font-bold mb-4 text-gray-900">📚 Learn Time Series Analysis</h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">📚 Learn Time Series Analysis</h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Master Applied Time Series Analysis through interactive modules, animations, and hands-on exercises
               </p>
             </div>
 
             {/* Backend Connection Status */}
-            <div className={`mb-8 p-4 rounded-lg ${backendConnected ? 'bg-green-50 border border-green-200' : 'bg-yellow-50 border border-yellow-200'}`}>
+            <div className={`mb-8 p-4 rounded-xl ${backendConnected ? 'bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 text-green-900 dark:text-green-300' : 'bg-yellow-50 dark:bg-yellow-950/40 border border-yellow-200 dark:border-yellow-800 text-yellow-900 dark:text-yellow-300'}`}>
               <div className="flex items-center space-x-2">
                 <div className={`w-3 h-3 rounded-full ${backendConnected ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                <span className="font-medium">
+                <span className="font-semibold text-sm">
                   {backendConnected ? 'Backend Connected - Full Features Available' : 'Limited Mode - Backend Not Connected'}
                 </span>
               </div>
               {!backendConnected && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-xs text-slate-600 dark:text-slate-400 mt-2">
                   Some features like quizzes and full content require backend connection. Basic modules are still available.
                 </p>
               )}
             </div>
 
             {/* Progress Overview */}
-            <div className="bg-white rounded-2xl p-8 mb-8 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 mb-8 shadow-xs border border-slate-200/70 dark:border-slate-800">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-semibold text-gray-900">Your Progress</h2>
-                <div className="text-sm text-gray-500">0/4 modules completed</div>
+                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">Your Progress</h2>
+                <div className="text-sm text-gray-500 dark:text-gray-400">0/4 modules completed</div>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-200 dark:bg-slate-800 rounded-full h-3">
                 <div className="bg-blue-600 h-3 rounded-full" style={{ width: '0%' }}></div>
               </div>
             </div>
@@ -293,11 +304,11 @@ const LearningPage: React.FC = () => {
               {learningModules.map((module) => (
                 <div 
                   key={module.id}
-                  className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-100"
+                  className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-xs hover:shadow-md transition-shadow cursor-pointer border border-gray-200/80 dark:border-slate-800"
                   onClick={() => setSelectedModule(module.id)}
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900">{module.title}</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{module.title}</h3>
                     <div className="flex space-x-2">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${getDifficultyColor(module.difficulty)}`}>
                         {module.difficulty}
@@ -305,7 +316,7 @@ const LearningPage: React.FC = () => {
                     </div>
                   </div>
                   
-                  <p className="text-gray-600 mb-4">{module.description}</p>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">{module.description}</p>
                   
                   <div className="mb-4">
                     <div className="flex items-center justify-between text-sm">
@@ -350,23 +361,23 @@ const LearningPage: React.FC = () => {
             </div>
 
             {/* Additional Resources */}
-            <div className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
-              <h2 className="text-2xl font-semibold mb-4 text-gray-900">📖 Additional Resources</h2>
+            <div className="mt-12 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-slate-900 dark:to-slate-800/80 rounded-2xl p-8 border border-blue-100/60 dark:border-slate-800">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900 dark:text-white">📖 Additional Resources</h2>
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <div className="text-3xl mb-2">📊</div>
-                  <h3 className="font-medium mb-2">Interactive Examples</h3>
-                  <p className="text-sm text-gray-600">Explore real-world datasets and see models in action</p>
+                  <h3 className="font-medium mb-2 text-slate-800 dark:text-white">Interactive Examples</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Explore real-world datasets and see models in action</p>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl mb-2">🧮</div>
-                  <h3 className="font-medium mb-2">Mathematical Deep-Dive</h3>
-                  <p className="text-sm text-gray-600">Understand the theory behind each model</p>
+                  <h3 className="font-medium mb-2 text-slate-800 dark:text-white">Mathematical Deep-Dive</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Understand the theory behind each model</p>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl mb-2">💡</div>
-                  <h3 className="font-medium mb-2">Best Practices</h3>
-                  <p className="text-sm text-gray-600">Learn industry tips and common pitfalls</p>
+                  <h3 className="font-medium mb-2 text-slate-800 dark:text-white">Best Practices</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Learn industry tips and common pitfalls</p>
                 </div>
               </div>
             </div>
@@ -557,29 +568,29 @@ const LearningPage: React.FC = () => {
               >
                 ← Back to Modules
               </button>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                 {moduleContent?.title || 'Loading...'}
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-300">
                 {moduleContent?.description}
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-sm">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-8 shadow-xs border border-gray-200/80 dark:border-slate-800">
               {moduleContent ? (
                 <div className="prose prose-blue max-w-none">
                   {moduleContent.content.map((section: any, index: number) => (
                     <div key={index} className="mb-8">
                       <div className="flex items-center justify-between mb-3">
-                        <h2 className="text-xl font-bold text-slate-900">
+                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
                           {section.title}
                         </h2>
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${
-                          section.type === 'mathematical' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
-                          section.type === 'practical' ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' :
-                          section.type === 'code_example' ? 'bg-slate-200 text-slate-800 border border-slate-300' :
-                          section.type === 'case_study' ? 'bg-purple-100 text-purple-800 border border-purple-200' :
-                          'bg-indigo-100 text-indigo-800 border border-indigo-200'
+                          section.type === 'mathematical' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-200 border border-blue-200 dark:border-blue-850' :
+                          section.type === 'practical' ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-850' :
+                          section.type === 'code_example' ? 'bg-slate-200 text-slate-800 dark:bg-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700' :
+                          section.type === 'case_study' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/60 dark:text-purple-200 border border-purple-200 dark:border-purple-850' :
+                          'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-200 border border-indigo-200 dark:border-indigo-850'
                         }`}>
                           {section.type === 'mathematical' && '🧮 Mathematical Rigor'}
                           {section.type === 'practical' && '💡 Practical Guide'}
@@ -590,11 +601,11 @@ const LearningPage: React.FC = () => {
                       </div>
                       
                       <div className={`p-6 rounded-2xl ${
-                        section.type === 'mathematical' ? 'bg-blue-50/60 border border-blue-200/80 shadow-xs' :
-                        section.type === 'practical' ? 'bg-emerald-50/60 border border-emerald-200/80 shadow-xs' :
-                        section.type === 'code_example' ? 'bg-slate-50 border border-slate-200 shadow-xs' :
-                        section.type === 'case_study' ? 'bg-purple-50/60 border border-purple-200/80 shadow-xs' :
-                        'bg-gray-50 border border-gray-200'
+                        section.type === 'mathematical' ? 'bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200/80 dark:border-blue-900/50 shadow-xs' :
+                        section.type === 'practical' ? 'bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs' :
+                        section.type === 'code_example' ? 'bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 shadow-xs' :
+                        section.type === 'case_study' ? 'bg-purple-50/60 dark:bg-purple-950/20 border border-purple-200/80 dark:border-purple-900/50 shadow-xs' :
+                        'bg-gray-50 dark:bg-slate-800/40 border border-gray-200 dark:border-slate-800'
                       }`}>
                         <FormattedSectionContent content={section.content} />
                       </div>
