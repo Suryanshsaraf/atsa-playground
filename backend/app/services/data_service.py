@@ -48,21 +48,23 @@ class DataService:
                 time_columns.append(col)
                 continue
                 
-            # Try to parse as datetime
-            try:
-                pd.to_datetime(df[col].dropna().head(10))
-                time_columns.append(col)
-            except:
-                pass
+            # Only try datetime parse on non-numeric columns
+            if not pd.api.types.is_numeric_dtype(df[col]):
+                try:
+                    pd.to_datetime(df[col].dropna().head(10))
+                    time_columns.append(col)
+                except Exception:
+                    pass
                 
         return time_columns
     
     def _detect_value_columns(self, df: pd.DataFrame) -> List[str]:
         """Detect columns that might contain numeric values for analysis"""
         value_columns = []
+        time_cols = set(self._detect_time_columns(df))
         
         for col in df.columns:
-            if df[col].dtype in ['int64', 'float64'] and col not in self._detect_time_columns(df):
+            if pd.api.types.is_numeric_dtype(df[col]) and col not in time_cols:
                 value_columns.append(col)
                 
         return value_columns
@@ -307,14 +309,16 @@ class DataService:
         # Handle missing values
         if preprocessing_options.get('fill_missing'):
             method = preprocessing_options.get('fill_method', 'interpolate')
-            if method == 'interpolate':
-                df = df.interpolate()
-            elif method == 'forward_fill':
-                df = df.fillna(method='ffill')
-            elif method == 'backward_fill':
-                df = df.fillna(method='bfill')
-            elif method == 'mean':
-                df = df.fillna(df.mean())
+            num_cols = df.select_dtypes(include=[np.number]).columns
+            if len(num_cols) > 0:
+                if method == 'interpolate':
+                    df[num_cols] = df[num_cols].interpolate(method='linear')
+                elif method == 'forward_fill':
+                    df[num_cols] = df[num_cols].ffill()
+                elif method == 'backward_fill':
+                    df[num_cols] = df[num_cols].bfill()
+                elif method == 'mean':
+                    df[num_cols] = df[num_cols].fillna(df[num_cols].mean())
         
         # Remove outliers if requested
         if preprocessing_options.get('remove_outliers'):
