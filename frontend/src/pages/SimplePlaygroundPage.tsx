@@ -25,9 +25,11 @@ import {
   Award,
   ArrowRight,
   Globe,
-  Search
+  Search,
+  Keyboard
 } from 'lucide-react';
 import API from '../services/api';
+import { KeyboardShortcutsModal } from '../components/common/KeyboardShortcutsModal';
 
 const SimplePlaygroundPage: React.FC = () => {
   // Connection & Dataset State
@@ -35,6 +37,7 @@ const SimplePlaygroundPage: React.FC = () => {
   const [sampleDatasets, setSampleDatasets] = useState<any[]>([]);
   const [selectedDatasetName, setSelectedDatasetName] = useState<string>('stock_prices');
   const [currentData, setCurrentData] = useState<any>(null);
+  const [isShortcutsOpen, setIsShortcutsOpen] = useState<boolean>(false);
 
   // Data Source Mode & yfinance State
   const [dataMode, setDataMode] = useState<'preset' | 'yfinance'>('preset');
@@ -116,6 +119,29 @@ const SimplePlaygroundPage: React.FC = () => {
 
   useEffect(() => {
     initializePlayground();
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === '?') {
+        setIsShortcutsOpen(prev => !prev);
+      } else if (e.key === 'Escape') {
+        setIsShortcutsOpen(false);
+      } else if (e.key === '1') {
+        setViewMode('forecast');
+      } else if (e.key === '2') {
+        setViewMode('comparison');
+      } else if (e.key === '3') {
+        setViewMode('exploration');
+      } else if (e.key === '4') {
+        setViewMode('diagnostics');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const initializePlayground = async () => {
@@ -1760,6 +1786,14 @@ const SimplePlaygroundPage: React.FC = () => {
                     {mode.label}
                   </button>
                 ))}
+                <button
+                  onClick={() => setIsShortcutsOpen(true)}
+                  className="px-2 py-1.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors flex items-center space-x-1"
+                  title="Keyboard Shortcuts (?)"
+                >
+                  <Keyboard className="w-3.5 h-3.5" />
+                  <span>(?)</span>
+                </button>
               </div>
             </div>
 
@@ -1773,6 +1807,11 @@ const SimplePlaygroundPage: React.FC = () => {
           </div>
         </div>
       </main>
+
+      <KeyboardShortcutsModal
+        isOpen={isShortcutsOpen}
+        onClose={() => setIsShortcutsOpen(false)}
+      />
     </div>
   );
 };
