@@ -7,6 +7,26 @@
 
 An comprehensive interactive web application for learning and experimenting with Applied Time Series Analysis (ATSA). Perfect for students, data scientists, and analysts who want to understand and apply time series forecasting methods through hands-on experimentation.
 
+## 🏗️ System Architecture & Box-Jenkins Pipeline
+
+```mermaid
+flowchart TD
+    A["Raw Time Series Data (CSV / Yahoo Finance)"] --> B["Stage 1: Identification & EDA"]
+    B --> B1["ADF Test (H0: Unit Root) & KPSS Test"]
+    B --> B2["ACF / PACF Correlograms & Decomposition"]
+    B1 --> C{"Stationary?"}
+    C -- "No (p > 0.05)" --> D["Differencing: Δ^d Y_t"]
+    D --> B1
+    C -- "Yes" --> E["Stage 2: Model Estimation & AutoML"]
+    E --> E1["Auto-ARIMA (AIC / BIC Minimization)"]
+    E --> E2["Multi-Model Benchmarking (SARIMA, Holt-Winters, MA)"]
+    E --> F["Stage 3: Diagnostic Checking"]
+    F --> F1["Ljung-Box White Noise Test (p > 0.05)"]
+    F --> F2["Jarque-Bera Normality Test & Histogram"]
+    F --> G["Out-of-Sample Holdout Backtest vs Naive Baseline"]
+    G --> H["Interactive Plotly Forecast & Visual Reports"]
+```
+
 ## 🌟 Key Features
 
 ### 📚 Comprehensive Learning Modules
