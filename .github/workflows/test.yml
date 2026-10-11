@@ -60,7 +60,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd frontend
-        npm ci
+        npm install --no-audit
     
     - name: Lint code
       run: |
@@ -106,7 +106,7 @@ jobs:
     - name: Install frontend dependencies
       run: |
         cd frontend
-        npm ci
+        npm install --no-audit
     
     - name: Start backend server
       run: |
