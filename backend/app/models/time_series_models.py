@@ -306,6 +306,26 @@ class TimeSeriesModelManager:
         if model_type not in self.models:
             raise ValueError(f"Unknown model type: {model_type}")
         
+        # Normalize ARIMA parameters
+        if model_type == 'arima':
+            if 'order' not in kwargs and ('p' in kwargs or 'd' in kwargs or 'q' in kwargs):
+                p = int(kwargs.pop('p', 1))
+                d = int(kwargs.pop('d', 1))
+                q = int(kwargs.pop('q', 1))
+                kwargs['order'] = (p, d, q)
+        elif model_type == 'sarima':
+            if 'order' not in kwargs and ('p' in kwargs or 'd' in kwargs or 'q' in kwargs):
+                p = int(kwargs.pop('p', 1))
+                d = int(kwargs.pop('d', 1))
+                q = int(kwargs.pop('q', 1))
+                kwargs['order'] = (p, d, q)
+            if 'seasonal_order' not in kwargs and ('P' in kwargs or 'D' in kwargs or 'Q' in kwargs or 's' in kwargs):
+                P = int(kwargs.pop('P', 1))
+                D = int(kwargs.pop('D', 1))
+                Q = int(kwargs.pop('Q', 1))
+                s = int(kwargs.pop('s', 12))
+                kwargs['seasonal_order'] = (P, D, Q, s)
+        
         return self.models[model_type](**kwargs)
     
     def fit_and_forecast(self, data: Dict[str, Any], model_config: Any) -> Dict[str, Any]:
